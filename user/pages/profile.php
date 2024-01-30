@@ -43,6 +43,7 @@ if (isset($_POST['changeprofile'])) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -73,7 +74,7 @@ if (isset($_POST['changeprofile'])) {
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue layout-top-nav">
   <!-- Site wrapper -->
   <div class="wrapper">
 
@@ -81,73 +82,74 @@ if (isset($_POST['changeprofile'])) {
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h4>
-          <?= $project ?>
-          <small><?= $slogan ?></small>
-        </h4>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li><a href="#">User</a></li>
-          <li class="active">Profile Update</li>
-        </ol>
-      </section>
+      <div class="container">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h4>
+            <?= $project ?>
+            <small><?= $slogan ?></small>
+          </h4>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">User</a></li>
+            <li class="active">Profile Update</li>
+          </ol>
+        </section>
 
-      <!-- Main content -->
-      <section class="content">
-        <div class="row">
-          <!-- left column -->
-          <div class="col-md-6">
-            <!-- general form elements -->
-            <div class="box box-primary">
-              <div class="box-header with-border">
-                <h3 class="box-title">Profile Update</h3>
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <!-- left column -->
+            <div class="col-md-6">
+              <!-- general form elements -->
+              <div class="box box-primary">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Profile Update</h3>
+                </div>
+                <div class="alert " id="alertclass" style="display: none">
+                  <button type="button" class="close" onclick="$('#alertclass').hide()">×</button>
+                  <p id="msg"></p>
+                </div>
+
+                <!-- /.box-header -->
+                <!-- form start -->
+                <form role="form" id="changesuperprofile" action="" method="post">
+                  <div class="box-body">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Email</label>
+                      <input type="text" class="form-control" id="username" placeholder="Enter Username" required name="username" readonly>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Enter Name</label>
+                      <input type="text" class="form-control" id="name" placeholder="Enter  Name" required name="name" pattern="[A-Za-z\s]+">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputPassword1"> Mobile</label>
+                      <input type="number" name="mobile" class="form-control" id="mobile" placeholder="Enter mobile number" required min="2000000000" max="9999999999">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Address</label>
+                      <textarea class="form-control" rows="3" placeholder="Enter Address" name="address" id='address' required></textarea>
+                    </div>
+                    <!-- /.box-body -->
+
+                    <div class="box-footer">
+                      <input type="hidden" name="changeprofile" id="changeprofile" value="changeprofile">
+                      <button type="submit" class="btn btn-primary" name="submit">Update</button>
+                      <button type="reset" class="btn btn-danger">Reset</button>
+                    </div>
+                </form>
               </div>
-              <div class="alert " id="alertclass" style="display: none">
-                <button type="button" class="close" onclick="$('#alertclass').hide()">×</button>
-                <p id="msg"></p>
-              </div>
-
-              <!-- /.box-header -->
-              <!-- form start -->
-              <form role="form" id="changesuperprofile" action="" method="post">
-                <div class="box-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter Username" required name="username" readonly>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Enter Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter  Name" required name="name" pattern="[A-Za-z\s]+">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputPassword1"> Mobile</label>
-                    <input type="number" name="mobile" class="form-control" id="mobile" placeholder="Enter mobile number" required min="2000000000" max="9999999999">
-                  </div>
-
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Address</label>
-                    <textarea class="form-control" rows="3" placeholder="Enter Address" name="address" id='address' required></textarea>
-                  </div>
-                  <!-- /.box-body -->
-
-                  <div class="box-footer">
-                    <input type="hidden" name="changeprofile" id="changeprofile" value="changeprofile">
-                    <button type="submit" class="btn btn-primary" name="submit">Update</button>
-                    <button type="reset" class="btn btn-danger">Reset</button>
-                  </div>
-              </form>
             </div>
           </div>
-        </div>
-      </section>
-      <!-- /.content -->
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
     </div>
-    <!-- /.content-wrapper -->
-
     <?php include("footer.php"); ?>
 
   </div>
@@ -218,4 +220,5 @@ if (isset($_POST['changeprofile'])) {
     })
   </script>
 </body>
+
 </html>

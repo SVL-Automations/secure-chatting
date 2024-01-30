@@ -40,7 +40,7 @@ if (isset($_POST['Add'])) {
 
     $receiverid = mysqli_real_escape_string($connection, trim(strip_tags($_POST["receiver"])));
     $message = mysqli_real_escape_string($connection, trim(strip_tags($_POST["message"])));
-    
+
     //Get public key of user from DB
     $result = mysqli_query($connection, "SELECT publickey from user where id = '$receiverid'");
     $data = mysqli_fetch_assoc($result);
@@ -61,8 +61,8 @@ if (isset($_POST['Add'])) {
     $ext = strtolower(pathinfo($img, PATHINFO_EXTENSION));
     $filename = $name . '_' . date("d-m-Y H-i-s") . '.' . $ext;
     move_uploaded_file($tmp, "../../chatimages/" . $filename);
-    
-    imgEncryption($message, $filename, $ext);   
+
+    imgEncryption($message, $filename, $ext);
 
     $stmt = $conn->prepare("INSERT INTO `imagechat`(`fromid`, `toid`, `time`, `image`) values(?, ?, ?,?)");
     $stmt->bind_param("ssss", $userid, $receiverid, $date, $filename);
@@ -176,7 +176,7 @@ if (isset($_POST['Delete'])) {
     </style>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue layout-top-nav">
     <!-- Site wrapper -->
     <div class="wrapper">
 
@@ -184,69 +184,71 @@ if (isset($_POST['Delete'])) {
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h4>
-                    <?= $project ?>
-                    <small><?= $slogan ?></small>
-                </h4>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li><a href="#">User</a></li>
-                    <li class="active">Image Chat</li>
-                </ol>
-            </section>
+            <div class="container">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h4>
+                        <?= $project ?>
+                        <small><?= $slogan ?></small>
+                    </h4>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li><a href="#">User</a></li>
+                        <li class="active">Image Chat</li>
+                    </ol>
+                </section>
 
-            <!-- Main content -->
-            <section class="content">
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- Default box -->
-                        <div class="box box-primary">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Image Chat Details</h3>
-                                <a class="btn btn-social-icon btn-primary pull-right" style="margin:5px" title="Send New Message" data-toggle="modal" data-target="#modaladdmessage"><i class="fa fa-plus"></i></a>
-                            </div>
-                            <div class="alert " id="alertclass" style="display: none">
-                                <button type="button" class="close" onclick="$('#alertclass').hide()">×</button>
-                                <p id="msg"></p>
-                            </div>
-                            <!-- /.box-header -->
-                            <!-- form start -->
-                            <div class="box-body  table-responsive">
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th class='text-center'>Id</th>
-                                            <th class='text-center'>From</th>
-                                            <th class='text-center'>Image</th>
-                                            <th class='text-center'>Date/Time</th>
-                                            <th class='text-center'>Decrypt</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tbody">
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Default box -->
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Image Chat Details</h3>
+                                    <a class="btn btn-social-icon btn-primary pull-right" style="margin:5px" title="Send New Message" data-toggle="modal" data-target="#modaladdmessage"><i class="fa fa-plus"></i></a>
+                                </div>
+                                <div class="alert " id="alertclass" style="display: none">
+                                    <button type="button" class="close" onclick="$('#alertclass').hide()">×</button>
+                                    <p id="msg"></p>
+                                </div>
+                                <!-- /.box-header -->
+                                <!-- form start -->
+                                <div class="box-body  table-responsive">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th class='text-center'>Id</th>
+                                                <th class='text-center'>From</th>
+                                                <th class='text-center'>Image</th>
+                                                <th class='text-center'>Date/Time</th>
+                                                <th class='text-center'>Decrypt</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody">
 
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th class='text-center'>Id</th>
-                                            <th class='text-center'>From</th>
-                                            <th class='text-center'>Image</th>
-                                            <th class='text-center'>Date/Time</th>
-                                            <th class='text-center'>Decrypt</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th class='text-center'>Id</th>
+                                                <th class='text-center'>From</th>
+                                                <th class='text-center'>Image</th>
+                                                <th class='text-center'>Date/Time</th>
+                                                <th class='text-center'>Decrypt</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
+                            <!-- /.box-body -->
+                            <!-- /.box-footer-->
                         </div>
-                        <!-- /.box-body -->
-                        <!-- /.box-footer-->
                     </div>
-                </div>
-            </section>
-            <!-- /.content -->
+                </section>
+                <!-- /.content -->
+            </div>
+            <!-- /.content-wrapper -->
         </div>
-        <!-- /.content-wrapper -->
         <!-- Add message User modal -->
         <form id="addmessage" action="" method="post" enctype="multipart/form-data">
             <div class="modal fade" id="modaladdmessage" style="display: none;">

@@ -63,7 +63,7 @@ if (isset($_POST['data'])) {
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue layout-top-nav">
   <!-- Site wrapper -->
   <div class="wrapper">
 
@@ -71,124 +71,126 @@ if (isset($_POST['data'])) {
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h4>
-          <?= $project ?>
-          <small><?= $slogan ?></small>
-        </h4>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-          <li><a href="#">User</a></li>
-          <li class="active">Dashboard</li>
-        </ol>
-      </section>
+      <div class="container">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h4>
+            <?= $project ?>
+            <small><?= $slogan ?></small>
+          </h4>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">User</a></li>
+            <li class="active">Dashboard</li>
+          </ol>
+        </section>
 
-      <!-- Main content -->
-      <section class="content">
-        <div class="row">
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-aqua">
-              <div class="inner">
-                <h4 id="usercount">00</h4>
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-aqua">
+                <div class="inner">
+                  <h4 id="usercount">00</h4>
 
-                <p>Total Users</p>
+                  <p>Total Users</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-users"></i>
+                </div>
+                <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
               </div>
-              <div class="icon">
-                <i class="fa fa-users"></i>
+            </div>
+            <!-- ./col -->
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-yellow">
+                <div class="inner">
+                  <h4 id="textmessage">00</h4>
+
+                  <p>Total Text msg</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-expeditedssl"></i>
+                </div>
+                <a href="textchat.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+
+            <div class="col-lg-3 col-xs-6">
+              <!-- small box -->
+              <div class="small-box bg-purple">
+                <div class="inner">
+                  <h4 id="imagemessage">00</h4>
+
+                  <p>Total Image msg</p>
+                </div>
+                <div class="icon">
+                  <i class="fa fa-camera"></i>
+                </div>
+                <a href="imagechat.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+              </div>
             </div>
           </div>
-          <!-- ./col -->
-          <!-- ./col -->
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-yellow">
-              <div class="inner">
-                <h4 id="textmessage">00</h4>
-
-                <p>Total Text msg</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-expeditedssl"></i>
-              </div>
-              <a href="textchat.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-purple">
-              <div class="inner">
-                <h4 id="imagemessage">00</h4>
-
-                <p>Total Image msg</p>
-              </div>
-              <div class="icon">
-                <i class="fa fa-camera"></i>
-              </div>
-              <a href="imagechat.php" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- /.content -->
+        </section>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
     </div>
-    <!-- /.content-wrapper -->
 
-    <?php include("footer.php"); ?>
+      <?php include("footer.php"); ?>
 
-  </div>
-  <!-- ./wrapper -->
+    </div>
+    <!-- ./wrapper -->
 
-  <!-- jQuery 3 -->
-  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-  <!-- Bootstrap 3.3.7 -->
-  <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- SlimScroll -->
-  <script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-  <!-- FastClick -->
-  <script src="../../bower_components/fastclick/lib/fastclick.js"></script>
-  <!-- AdminLTE App -->
-  <script src="../../dist/js/adminlte.min.js"></script>
-  <!-- AdminLTE for demo purposes -->
-  <script src="../../dist/js/demo.js"></script>
-  <!-- DataTables -->
-  <script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-  <!-- date-range-picker -->
-  <script src="../../bower_components/moment/min/moment.min.js"></script>
-  <script src="../../bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
-  <!-- bootstrap datepicker -->
-  <script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('.sidebar-menu').tree()
+    <!-- jQuery 3 -->
+    <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="../../bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../dist/js/demo.js"></script>
+    <!-- DataTables -->
+    <script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <!-- date-range-picker -->
+    <script src="../../bower_components/moment/min/moment.min.js"></script>
+    <script src="../../bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <!-- bootstrap datepicker -->
+    <script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('.sidebar-menu').tree()
 
-      //display data card
-      function tabledata() {
-        $.ajax({
-          url: $(location).attr('href'),
-          type: 'POST',
-          data: {
-            'data': 'data'
-          },
-          success: function(response) {
-            // console.log(response); 
-            var returnedData = JSON.parse(response);
-            console.log(returnedData);
-            $('#usercount').text(returnedData['usercount'][0]['usercount']);
-            $('#textmessage').text(returnedData['textmessage'][0]['textmessage']);
-            $('#imagemessage').text(returnedData['imagemessage'][0]['imagemessage']);
-          }
-        });
-      }
+        //display data card
+        function tabledata() {
+          $.ajax({
+            url: $(location).attr('href'),
+            type: 'POST',
+            data: {
+              'data': 'data'
+            },
+            success: function(response) {
+              // console.log(response); 
+              var returnedData = JSON.parse(response);
+              console.log(returnedData);
+              $('#usercount').text(returnedData['usercount'][0]['usercount']);
+              $('#textmessage').text(returnedData['textmessage'][0]['textmessage']);
+              $('#imagemessage').text(returnedData['imagemessage'][0]['imagemessage']);
+            }
+          });
+        }
 
-      tabledata();
-    })
-  </script>
+        tabledata();
+      })
+    </script>
 </body>
 
 </html>
