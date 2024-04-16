@@ -10,22 +10,16 @@ set_error_handler("customError");
 function customError($errno, $errstr)
 {
     $msg = new \stdClass();
-    $msg->data = $errstr;
-    $msg->type = "alert alert-danger alert-dismissible ";
+    $msg->message = $errstr;
     echo json_encode($msg);
     exit();
 }
 
-//Fetch messages from database
-
 if (isset($_POST['tabledata'])) {
 
     $data = new \stdClass();
-    $result = mysqli_query($connection, "SET NAMES utf8mb4");
-    $result = mysqli_query($connection, "SELECT t.id,t.time,u.name as fromname,t.image from imagechat as t inner join user as u on t.fromid = u.id where t.toid  ='$userid' ORDER BY t.time DESC");
-    $data->list = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
-    //Get list of user in DB
+    //Get user list from DB
     $result = mysqli_query($connection, "SELECT * FROM user WHERE status = 1 AND id not in ($userid)");
     $data->userlist = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -33,7 +27,21 @@ if (isset($_POST['tabledata'])) {
     exit();
 }
 
-//Add new message  
+//Gte messages from db
+if (isset($_POST['getMessage'])) {
+
+    $fromid = $_POST['id'];
+
+    $data = new \stdClass();
+    $result = mysqli_query($connection, "SET NAMES utf8mb4");
+    $result = mysqli_query($connection, "SELECT t.id,t.time,u.name as fromname,t.image from imagechat as t inner join user as u on t.fromid = u.id where t.toid = '$userid' and t.fromid = '$fromid' ORDER BY t.time DESC");
+    $data->list = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+    echo json_encode($data);
+    exit();
+}
+
+//Add message  
 if (isset($_POST['Add'])) {
     $msg = new \stdClass();
     $result = mysqli_query($connection, "SET NAMES utf8mb4");
@@ -201,47 +209,66 @@ if (isset($_POST['Delete'])) {
                 <!-- Main content -->
                 <section class="content">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <!-- Default box -->
                             <div class="box box-primary">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Image Chat Details</h3>
-                                    <a class="btn btn-social-icon btn-primary pull-right" style="margin:5px" title="Send New Message" data-toggle="modal" data-target="#modaladdmessage"><i class="fa fa-plus"></i></a>
+                                    <h3 class="box-title pull-left"> Chat Details</h3>
+                                    <!-- <a class="btn btn-social-icon btn-primary pull-right" style="margin:5px" title="Send New Message" data-toggle="modal" data-target="#modaladdmessage"><i class="fa fa-plus"></i></a> -->
                                 </div>
                                 <div class="alert " id="alertclass" style="display: none">
                                     <button type="button" class="close" onclick="$('#alertclass').hide()">×</button>
                                     <p id="msg"></p>
                                 </div>
-                                <!-- /.box-header -->
-                                <!-- form start -->
-                                <div class="box-body  table-responsive">
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th class='text-center'>Id</th>
-                                                <th class='text-center'>From</th>
-                                                <th class='text-center'>Image</th>
-                                                <th class='text-center'>Date/Time</th>
-                                                <th class='text-center'>Decrypt</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="tbody">
+                                <div class="box-body">
+                                    <form id="addmessage" action="" method="post" enctype="multipart/form-data">
 
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th class='text-center'>Id</th>
-                                                <th class='text-center'>From</th>
-                                                <th class='text-center'>Image</th>
-                                                <th class='text-center'>Date/Time</th>
-                                                <th class='text-center'>Decrypt</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                        <div class="alert " id="addalertclass" style="display: none">
+                                            <button type="button" class="close" onclick="$('#addalertclass').hide()">×</button>
+                                            <p id="addmsg"></p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Receiver </label>
+                                            <select class="form-control select2 select3" style="width: 100%;" required name="receiver" id="receiver">
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Message</label>
+                                            <textarea class="form-control" rows="3" placeholder="Message" name="message" id="message"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Image</label>
+                                            <input type="file" class="form-control" name="photo" id="photo" required accept='image/*'>
+                                            <img src="" alt="No Image" id="img" style='height:150px;'>
+                                        </div>
+
+                                        <div class="box-footer ">
+                                            <input type="hidden" name="Add" value="Add">
+                                            <button type="submit" name="Add" value="Add" id='add' class="btn btn-success" disabled>Send Me</button>
+                                            <button type="reset" class="btn pull-right btn-warning">Clear</button>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </form>
                                 </div>
+                                <!-- /.box-header -->
+
                             </div>
                             <!-- /.box-body -->
                             <!-- /.box-footer-->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-primary col-md-6">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title" id="sendername">Select User</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" id="messages">
+
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
                         </div>
                     </div>
                 </section>
@@ -249,51 +276,6 @@ if (isset($_POST['Delete'])) {
             </div>
             <!-- /.content-wrapper -->
         </div>
-        <!-- Add message User modal -->
-        <form id="addmessage" action="" method="post" enctype="multipart/form-data">
-            <div class="modal fade" id="modaladdmessage" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span></button>
-                            <h4 class="modal-title">Send New Message </h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="alert " id="addalertclass" style="display: none">
-                                <button type="button" class="close" onclick="$('#addalertclass').hide()">×</button>
-                                <p id="addmsg"></p>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Receiver </label>
-                                <select class="form-control select2 select3" style="width: 100%;" required name="receiver" id="receiver">
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Message</label>
-                                <textarea class="form-control" rows="3" placeholder="Message" name="message" id="message"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="exampleInputEmail1">Image</label>
-                                <input type="file" class="form-control" name="photo" id="photo" required accept='image/*'>
-                                <img src="" alt="No Image" id="img" style='height:150px;'>
-                            </div>
-                        </div>
-                        <div class="modal-footer ">
-                            <input type="hidden" name="Add" value="Add">
-                            <button type="submit" name="Add" value="Add" id='add' class="btn btn-success" disabled>Send Me</button>
-                            <button type="button" class="btn pull-right btn-warning" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </form>
-        <!-- End Add message user modal -->
-
 
         <!-- decrypt message User modal -->
         <form id="viewmessage" action="" method="post" enctype="multipart/form-data">
@@ -306,9 +288,9 @@ if (isset($_POST['Delete'])) {
                             <h4 class="modal-title">Decrypt Message </h4>
                         </div>
                         <div class="modal-body">
-                            <div class="alert " id="addalertclass" style="display: none">
-                                <button type="button" class="close" onclick="$('#addalertclass').hide()">×</button>
-                                <p id="addmsg"></p>
+                            <div class="alert " id="editalertclass" style="display: none">
+                                <button type="button" class="close" onclick="$('#editalertclass').hide()">×</button>
+                                <p id="editmsg"></p>
                             </div>
 
                             <div class="form-group">
@@ -341,10 +323,9 @@ if (isset($_POST['Delete'])) {
                     <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
-
             </div>
         </form>
-        <!-- End Add author user modal -->
+        <!-- End decrypt message User modal -->
 
         <?php include("footer.php"); ?>
 
@@ -377,12 +358,16 @@ if (isset($_POST['Delete'])) {
             $('#example1').DataTable({
                 stateSave: true,
                 destroy: true,
+                "columnDefs": [{
+                    "width": "20%",
+                    "targets": 2
+                }]
             });
 
             //Initialize Select2 Elements
             $('.select2').select2()
 
-            //get message from DB and display data table   
+            //get message from db and display data table   
             function tabledata() {
                 $('.select2').empty();
                 $('#example1').dataTable().fnDestroy();
@@ -398,34 +383,6 @@ if (isset($_POST['Delete'])) {
                     success: function(response) {
                         //console.log(response);
                         var returnedData = JSON.parse(response);
-                        var srno = 0;
-                        $.each(returnedData['list'], function(key, value) {
-                            srno++;
-                            var deletemessage = "";
-                            var datatext = 'data-editid="' + value.id + '" data-fromname="' + value.fromname + '" data-message="' + value.time + '"';
-
-                            var editbutton = '<button type="submit" name="Edit" id="edit" ' +
-                                datatext +
-                                ' class="btn btn-xs btn-info edit-button" style= "margin:5px" title="View message" data-toggle="modal" data-target="#modalviewmessage"><i class="fa fa-eye"></i></button>';
-
-                            deletemessage = '<button type="submit" name="Update" id="Update" ' +
-                                'data-editid="' + value.id +
-                                '" class="btn btn-xs btn-danger delete-button" style= "margin:5px" title="Delete Message" ><i class="fa fa-close"></i></button>';
-
-                            var html = '<tr class="odd gradeX">' +
-                                '<td class="text-center">' + srno + '</td>' +
-                                '<td class="text-center">' + value.fromname + ' </td>' +
-                                '<td class="text-center"><a href="../../chatimages/' + value.image + '">View</a></td>' +
-                                '<td class="text-center">' + value.time + '</td>' +
-                                '<td class="text-center">' + editbutton + deletemessage + '</td>' +
-                                '</tr>';
-                            $('#example1 tbody').append(html);
-                        });
-
-                        $('#example1').DataTable({
-                            stateSave: true,
-                            destroy: true,
-                        });
 
                         $('.select3').append(new Option("Select user", ""));
                         $.each(returnedData['userlist'], function(key, value) {
@@ -438,6 +395,169 @@ if (isset($_POST['Delete'])) {
             }
 
             tabledata();
+
+            function getMessages(id) {
+                $('#messages').empty();
+                $.ajax({
+                    url: $(location).attr('href'),
+                    type: 'POST',
+                    data: {
+                        'id': id,
+                        'getMessage': 'getMessage'
+                    },
+
+                    success: function(response) {
+                        console.log(response);
+                        var returnedData = JSON.parse(response);
+                        var srno = 0;
+                        if (returnedData['list'].length > 0) {
+                            $.each(returnedData['list'], function(key, value) {
+                                srno++;
+                                var deletemessage = "";
+                                var datatext = 'data-editid="' + value.id + '" data-fromname="' + value.fromname + '" data-message="' + value.time + '"';
+
+                                var editbutton = '<button type="submit" name="Edit" id="edit" ' +
+                                    datatext +
+                                    ' class="btn btn-xs btn-info edit-button" style= "margin:5px" title="View message" data-toggle="modal" data-target="#modalviewmessage"><i class="fa fa-eye"></i></button>';
+
+                                deletemessage = '<button type="submit" name="Delete" id="Delete" ' +
+                                    'data-editid="' + value.id +
+                                    '" class="btn btn-xs btn-danger delete-button" style= "margin:5px" title="Delete Message" ><i class="fa fa-close"></i></button>';
+
+
+                                var html = '<strong>' + value.time + '</strong>' +
+                                    '<img class="img-responsive" src="../../chatimages/' + value.image + '">' +
+                                    editbutton + deletemessage +
+                                    '<hr>';
+                                $('#messages').append(html);
+                            });
+                        } else {
+                            $('#messages').append("No message from " + name);
+                        }
+
+                    }
+                });
+
+            }
+
+            $('#receiver').change(function(e) {
+                $('#messages').empty();
+                let id = $(this).val();
+                e.preventDefault();
+                let name = $(this).find("option:selected").text();
+                $('#sendername').text($(this).find("option:selected").text());
+                getMessages(id);
+            });
+
+            //Add message to db
+            $('#addmessage').submit(function(e) {
+                let id = $('#receiver').val();                
+
+                $('#addalertclass').removeClass();
+                $('#addmsg').empty();
+
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(location).attr('href'),
+                    type: 'POST',
+                    data: new FormData(this),
+                    enctype: 'multipart/form-data',
+                    processData: false, // tell jQuery not to process the data
+                    contentType: false, // tell jQuery not to set contentType
+
+                    success: function(response) {
+                        // console.log(response);
+                        returnedData = JSON.parse(response);
+                        if (returnedData['value'] == 1) {
+                            $('#addmessage')[0].reset();
+                            $('#addalertclass').addClass(returnedData['type']);
+                            $('#addmsg').append(returnedData['data']);
+                            $("#addalertclass").show();
+                            getMessages(id);
+                        } else {
+                            $('#addalertclass').addClass(returnedData['type']);
+                            $('#addmsg').append(returnedData['data']);
+                            $("#addalertclass").show();
+                            getMessages(id);
+                        }
+
+                    }
+                });
+
+            });
+
+            //Delete message
+            $(document).on("click", ".delete-button", function(e) {
+                let id = $('#receiver').val();
+                $('#alertclass').removeClass();
+                $('#msg').empty();
+
+                e.preventDefault();
+                $.ajax({
+                    url: $(location).attr('href'),
+                    type: 'POST',
+                    data: {
+                        'Delete': 'Delete',
+                        'editid': $(this).data('editid'),
+                        'status': $(this).data('status')
+                    },
+                    success: function(response) {
+                        //console.log(response);
+                        returnedData = JSON.parse(response);
+                        if (returnedData['value'] == 1) {
+                            $('#alertclass').addClass(returnedData['type']);
+                            $('#msg').append(returnedData['data']);
+                            $("#alertclass").show();
+                        } else {
+                            $('#alertclass').addClass(returnedData['type']);
+                            $('#msg').append(returnedData['data']);
+                            $("#alertclass").show();
+                        }
+                        getMessages(id);
+                    }
+                });
+            });
+
+            //View message to modal
+            $(document).on("click", ".edit-button", function(e) {
+                $('#editalertclass').removeClass();
+                $('#editmsg').empty();
+                $(".modal-body #frommessage").text($(this).data('fromname'));
+                $(".modal-body #encryptedmessage").text($(this).data('message'));
+                $("#editid").val($(this).data('editid'));
+            });
+
+            //decrupt message and View Message
+            $('#viewmessage').submit(function(e) {
+                $('#editalertclass').removeClass();
+                $('#editmsg').empty();
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(location).attr('href'),
+                    type: 'POST',
+                    data: $('#viewmessage').serialize(),
+                    success: function(response) {
+                        // console.log(response);
+                        returnedData = JSON.parse(response);
+                        if (returnedData['message'] == "Invalid Key") {
+                            $('#editalertclass').addClass("alert alert-danger alert-dismissible");
+                            $('#editmsg').append("Invalid Key");
+                            $("#editalertclass").show();
+                        } else {
+                            $(".modal-body #decryptedmessage").val(returnedData['message']);
+                        }
+
+                    }
+                });
+            });
+
+            //Reset tab
+            $('#closeb').click(function(e) {
+                // alert("demo");
+                $('#viewmessage')[0].reset();
+            })
 
             //Display image when photo upload and validate filesize and type
             $('#photo').on('change', function() {
@@ -463,111 +583,6 @@ if (isset($_POST['Delete'])) {
                     $('#add').prop('disabled', false);
                 }
             });
-
-            //Send message and store in db
-            $('#addmessage').submit(function(e) {
-
-                $('#example1').dataTable().fnDestroy();
-                $('#example1 tbody').empty();
-
-                $('#addalertclass').removeClass();
-                $('#addmsg').empty();
-
-                e.preventDefault();
-
-                $.ajax({
-                    url: $(location).attr('href'),
-                    type: 'POST',
-                    data: new FormData(this),
-                    enctype: 'multipart/form-data',
-                    processData: false, // tell jQuery not to process the data
-                    contentType: false, // tell jQuery not to set contentType
-
-                    success: function(response) {
-                        // console.log(response);
-                        returnedData = JSON.parse(response);
-                        if (returnedData['value'] == 1) {
-                            $('#addmessage')[0].reset();
-                            $('#addalertclass').addClass(returnedData['type']);
-                            $('#addmsg').append(returnedData['data']);
-                            $("#addalertclass").show();
-                            tabledata();
-                        } else {
-                            $('#addalertclass').addClass(returnedData['type']);
-                            $('#addmsg').append(returnedData['data']);
-                            $("#addalertclass").show();
-                            tabledata();
-                        }
-
-                    }
-                });
-
-            });
-
-            //Delete message
-            $(document).on("click", ".delete-button", function(e) {
-
-                $('#alertclass').removeClass();
-                $('#msg').empty();
-
-                e.preventDefault();
-                $.ajax({
-                    url: $(location).attr('href'),
-                    type: 'POST',
-                    data: {
-                        'Delete': 'Delete',
-                        'editid': $(this).data('editid'),
-                        'status': $(this).data('status')
-                    },
-                    success: function(response) {
-                        //console.log(response);
-                        returnedData = JSON.parse(response);
-                        if (returnedData['value'] == 1) {
-                            $('#alertclass').addClass(returnedData['type']);
-                            $('#msg').append(returnedData['data']);
-                            $("#alertclass").show();
-                            tabledata();
-                        } else {
-                            $('#alertclass').addClass(returnedData['type']);
-                            $('#msg').append(returnedData['data']);
-                            $("#alertclass").show();
-                        }
-                        tabledata();
-                    }
-                });
-            });
-
-            //Message to decrypted modal
-            $(document).on("click", ".edit-button", function(e) {
-                $('#editalertclass').removeClass();
-                $('#editmsg').empty();
-                $(".modal-body #frommessage").text($(this).data('fromname'));
-                $(".modal-body #encryptedmessage").text($(this).data('message'));
-                $("#editid").val($(this).data('editid'));
-            });
-
-            //Decrypte message
-            $('#viewmessage').submit(function(e) {
-                $('#editalertclass').removeClass();
-                $('#editmsg').empty();
-                e.preventDefault();
-
-                $.ajax({
-                    url: $(location).attr('href'),
-                    type: 'POST',
-                    data: $('#viewmessage').serialize(),
-                    success: function(response) {
-                        // console.log(response);
-                        returnedData = JSON.parse(response);
-                        $(".modal-body #decryptedmessage").val(returnedData['message']);
-                    }
-                });
-            });
-            //Close tab and reset 
-            $('#closeb').click(function(e) {
-                // alert("demo");
-                $('#viewmessage')[0].reset();
-            })
         })
     </script>
 </body>
